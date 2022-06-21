@@ -1,12 +1,19 @@
 <template>
     <div class="product-page--container">
-        <h1>Hello</h1>
+        <product-form/>
+        <product-list/>
     </div>
 </template>
 
 <script>
-export default {
+import ProductForm from '@/components/product-form/ProductForm.vue'
+import ProductList from '@/components/product-list/ProductList.vue'
 
+export default {
+    components: {
+        ProductForm,
+        ProductList
+    }
 }
 </script>
 
@@ -14,5 +21,6 @@ export default {
 .product-page--container {
     display: grid;
     grid-template-columns: 1fr 2fr;
+    padding: 36px;
 }
 </style>
