@@ -1,11 +1,10 @@
 export const getters = {
     products (state) {
         const items = state.productsIds.map(id => state.products[id])
-        if (state.sortDirection === '') {
-            return items
-        }
-        if (state.sortDirection === 'default') {
-            return items.reverse()
+        if (state.sortDirection === 'name') {
+            return items.sort((a, b) => {
+                return a.name > b.name ? 1 : -1
+            })
         }
         return items.sort((a, b) => {
             if (state.sortDirection === 'increase') {

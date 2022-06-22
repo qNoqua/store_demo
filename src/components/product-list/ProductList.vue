@@ -1,7 +1,7 @@
 <template>
   <div class="right-container">
     <div class="btn-container">
-      <drop-down/>
+      <drop-down />
     </div>
     <div class="list-container">
       <product-item
@@ -19,7 +19,7 @@ import DropDown from "@/components/UI/DropDown.vue";
 export default {
   components: {
     ProductItem,
-    DropDown
+    DropDown,
   },
   computed: {
     products() {
@@ -38,6 +38,7 @@ export default {
   grid-template-columns: repeat(auto-fill, 332px);
   grid-auto-rows: 432px;
   grid-gap: 15px;
+  justify-content: center;
   justify-items: center;
   align-items: center;
 }
@@ -46,6 +47,7 @@ export default {
   grid-template-columns: repeat(auto-fill, 332px);
   grid-auto-rows: minmax(50px, min-content);
   grid-gap: 15px;
+  justify-content: center;
   justify-items: end;
   align-items: center;
 }

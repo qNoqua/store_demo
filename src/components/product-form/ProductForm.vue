@@ -1,76 +1,83 @@
 <template>
   <div class="left-container">
-    <div class="form-title">Добавление товара</div>
-    <div class="form-container">
-      <div class="input-container">
-        <label for="name" class="name" required>Наименование товара</label>
-        <input
-          class="input input_name"
-          type="text"
-          placeholder="Введите наименование товара"
-          id="name"
-          v-model="nameOfProduct.value"
-          v-on:input="nameValidator"
-          v-bind:class="nameOfProduct.status"
-        />
-        <span v-if="nameOfProduct.status === 'invalid'" class="span-err"
-          >Поле является обязательным</span
-        >
-        <span v-else></span>
-      </div>
-      <div class="input-container">
-        <label for="description" class="description">Описание товара</label>
-        <textarea
-          class="input input-description"
-          type="text"
-          placeholder="Введите описание товара"
-          id="description"
-          v-model="descriptionOfProduct.value"
-        />
-        <span></span>
-      </div>
-      <div class="input-container">
-        <label for="img-link" class="img-link-label" required
-          >Ссылка на изображение товара</label
-        >
-        <input
-          class="input input-img-link"
-          type="text"
-          placeholder="Введите ссылку"
-          id="img-link"
-          v-model="imgLinkOfProduct.value"
-          v-on:input="imgLinkValidator"
-          v-bind:class="imgLinkOfProduct.status"
-        />
-        <span v-if="imgLinkOfProduct.status === 'invalid'" class="span-err"
-          >Поле является обязательным</span
-        >
-        <span v-else></span>
-      </div>
-      <div class="input-container">
-        <label for="price" class="price-label" required>Цена товара</label>
-        <input
-          class="input input-price"
-          v-model="modelNumber"
-          v-on:focus="clearPriceInput"
-          v-on:keyup="priceValidator"
-          type="text"
-          placeholder="Введите цену"
-          id="price"
-          v-bind:class="priceOfProduct.status"
-        />
-        <span v-if="priceOfProduct.status === 'invalid'" class="span-err"
-          >Поле является обязательным</span
-        >
-        <span v-else></span>
-      </div>
-      <button
-        v-bind:disabled="isButtonDisabled"
-        v-on:click.prevent="pushProductToStore"
-        class="btn"
-      >
-        Добавить товар
+    <div class="form-title">
+      <span>Добавление товара</span>
+      <button class="show-btn" v-bind:class="{ 'btn-hidden': buttonHidden }" v-on:click="isOpen = !isOpen">
+        <img src="../../assets/icons/rectangle.svg" />
       </button>
+    </div>
+    <div class="form-wrapper" v-bind:class="{ opened: isOpen }">
+      <div class="form-container">
+        <div class="input-container">
+          <label for="name" class="name" required>Наименование товара</label>
+          <input
+            class="input input_name"
+            type="text"
+            placeholder="Введите наименование товара"
+            id="name"
+            v-model="nameOfProduct.value"
+            v-on:input="nameValidator"
+            v-bind:class="nameOfProduct.status"
+          />
+          <span v-if="nameOfProduct.status === 'invalid'" class="span-err"
+            >Поле является обязательным</span
+          >
+          <span v-else></span>
+        </div>
+        <div class="input-container">
+          <label for="description" class="description">Описание товара</label>
+          <textarea
+            class="input input-description"
+            type="text"
+            placeholder="Введите описание товара"
+            id="description"
+            v-model="descriptionOfProduct.value"
+          />
+          <span></span>
+        </div>
+        <div class="input-container">
+          <label for="img-link" class="img-link-label" required
+            >Ссылка на изображение товара</label
+          >
+          <input
+            class="input input-img-link"
+            type="text"
+            placeholder="Введите ссылку"
+            id="img-link"
+            v-model="imgLinkOfProduct.value"
+            v-on:input="imgLinkValidator"
+            v-bind:class="imgLinkOfProduct.status"
+          />
+          <span v-if="imgLinkOfProduct.status === 'invalid'" class="span-err"
+            >Поле является обязательным</span
+          >
+          <span v-else></span>
+        </div>
+        <div class="input-container">
+          <label for="price" class="price-label" required>Цена товара</label>
+          <input
+            class="input input-price"
+            v-model="modelNumber"
+            v-on:focus="clearPriceInput"
+            v-on:keyup="priceValidator"
+            type="text"
+            placeholder="Введите цену"
+            id="price"
+            v-bind:class="priceOfProduct.status"
+          />
+          <span v-if="priceOfProduct.status === 'invalid'" class="span-err"
+            >Поле является обязательным</span
+          >
+          <span v-else></span>
+        </div>
+        <button
+          v-bind:disabled="isButtonDisabled"
+          v-on:click.prevent="pushProductToStore"
+          class="btn"
+        >
+          Добавить товар
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -98,6 +105,8 @@ export default {
         isValid: false,
         status: "clear",
       },
+      isOpen: window.innerWidth > 768,
+      buttonHidden: window.innerWidth > 768,
     };
   },
   methods: {
@@ -147,6 +156,10 @@ export default {
       };
       console.log(product);
       this.$store.commit("addProductToList", product);
+      this.nameOfProduct.value = '';
+      this.descriptionOfProduct.value = '',
+      this.imgLinkOfProduct.value = '',
+      this.priceOfProduct.value = ''
     },
   },
   computed: {
@@ -176,11 +189,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media screen and (max-width: 768px) {
+}
 .left-container {
   display: grid;
   grid-gap: 20px;
   align-items: flex-start;
   .form-title {
+    display: flex;
+    justify-content: space-between;
     font-family: "Source Sans Pro";
     font-style: normal;
     font-weight: 600;
@@ -188,6 +205,49 @@ export default {
     height: 50px;
     line-height: 35px;
     color: #3f3f3f;
+    & > .show-btn {
+      position: relative;
+      background: #fffefb;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      height: 36px;
+      width: 36px;
+      cursor: pointer;
+      transition: 150ms;
+      & > img {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: none;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+      &:hover {
+        background: #e5e5e5;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      &:active {
+        background: #fffefb;
+      }
+      &.btn-hidden {
+        visibility: hidden;
+      }
+    }
+  }
+  .form-wrapper {
+    overflow: hidden;
+    min-width: 322px;
+    max-height: 0;
+    transition: max-height 300ms ease;
+    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04),
+      0px 6px 10px rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
+    &.opened {
+      max-height: 440px;
+    }
   }
   .form-container {
     display: grid;
@@ -195,9 +255,6 @@ export default {
     min-height: 440px;
     padding: 27px;
     background: #fffefb;
-    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04),
-      0px 6px 10px rgba(0, 0, 0, 0.02);
-    border-radius: 4px;
   }
   .input-container {
     display: grid;

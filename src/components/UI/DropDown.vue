@@ -6,7 +6,7 @@
     v-on:click="isVisible = false"
   >
     <span class="title">Сортировка</span>
-    <img src="../../assets/icons/rectangle.png" />
+    <img src="../../assets/icons/rectangle.svg" />
     <div class="options" v-if="isVisible">
       <div
         class="option"
@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       options: [
-        { name: "наименованию", value: "default" },
+        { name: "наименованию", value: "name" },
         { name: "возрастанию цены", value: "increase" },
         { name: "убыванию цены", value: "decrease" },
       ],

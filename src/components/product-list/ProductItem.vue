@@ -9,8 +9,8 @@
       <div class="description-container">{{ stats.description }}</div>
       <div class="price-container">{{ stats.price }} руб.</div>
     </div>
-    <button class="btn" v-if="isVisibilityButton">
-      <img src="../../assets/icons/delete.svg" alt="" />
+    <button class="btn" v-on:click.prevent="removeProduct" v-if="isVisibilityButton">
+      <img src="../../assets/icons/delete.svg"/>
     </button>
   </div>
 </template>
@@ -28,6 +28,12 @@ return {
       required: true,
     },
   },
+  methods: {
+    removeProduct() {
+      console.log(this.stats)
+      this.$store.commit('removeProduct', this.stats)
+    }
+  }
 };
 </script>
 
