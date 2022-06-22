@@ -136,7 +136,6 @@ export default {
         description: this.descriptionOfProduct.value,
         imgLink: this.imgLinkOfProduct.value,
         price: this.priceOfProduct.value,
-        displayedPrice: this.priceOfProduct.displayedValue
       };
       console.log(product)
       this.$store.commit('addProductToList', product)

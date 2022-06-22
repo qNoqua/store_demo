@@ -4,8 +4,8 @@ import { actions } from './actions'
 
 export const productsModule = {
     state: {
-        products: {},
-        productIds: []
+        product: JSON.parse(localStorage.getItem('localProduct')) || {},
+        productsIds: JSON.parse(localStorage.getItem('localproductsIds')) || []
     },
     getters: getters,
     mutations: mutations,
