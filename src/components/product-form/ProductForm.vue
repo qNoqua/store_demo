@@ -10,9 +10,10 @@
           placeholder="Введите наименование товара"
           id="name"
           v-model="nameOfProduct.value"
-          v-on:input="nameValidateStatus"
+          v-on:input="nameValidator"
+          v-bind:class="nameOfProduct.status"
         />
-        <span v-if="nameOfProduct.status === 'dirty'" class="span-err"
+        <span v-if="nameOfProduct.status === 'invalid'" class="span-err"
           >Поле является обязательным</span
         >
         <span v-else></span>
@@ -24,6 +25,7 @@
           type="text"
           placeholder="Введите описание товара"
           id="description"
+          v-model="descriptionOfProduct.value"
         />
         <span></span>
       </div>
@@ -37,9 +39,10 @@
           placeholder="Введите ссылку"
           id="img-link"
           v-model="imgLinkOfProduct.value"
-          v-on:input="imgLinkValidateStatus"
+          v-on:input="imgLinkValidator"
+          v-bind:class="imgLinkOfProduct.status"
         />
-        <span v-if="imgLinkOfProduct.status === 'dirty'" class="span-err"
+        <span v-if="imgLinkOfProduct.status === 'invalid'" class="span-err"
           >Поле является обязательным</span
         >
         <span v-else></span>
@@ -49,19 +52,21 @@
         <input
           class="input input-price"
           v-model="modelNumber"
-          v-on:focus="priceOfProduct.indicatorChange = true"
-          v-on:blur="priceOfProduct.indicatorChange = false"
-          v-on:keypress="priceValidator"
+          v-on:focus="clearPriceInput"
+          v-on:keyup="priceValidator"
           type="text"
           placeholder="Введите цену"
           id="price"
+          v-bind:class="priceOfProduct.status"
         />
-        <span v-if="priceOfProduct.status === 'dirty'" class="span-err"
+        <span v-if="priceOfProduct.status === 'invalid'" class="span-err"
           >Поле является обязательным</span
         >
         <span v-else></span>
       </div>
-      <button class="btn">Добавить товар</button>
+      <button v-bind:disabled="isButtonDisabled" v-on:click.prevent="pushProductToStore" class="btn">
+        Добавить товар
+      </button>
     </div>
   </div>
 </template>
@@ -72,85 +77,88 @@ export default {
     return {
       nameOfProduct: {
         value: null,
-        ready: false,
+        isValid: false,
         status: "clear",
+      },
+      descriptionOfProduct: {
+        value: null,
       },
       imgLinkOfProduct: {
         value: null,
-        ready: false,
+        isValid: false,
         status: "clear",
       },
       priceOfProduct: {
         displayedValue: "",
-        value: 0,
-        ready: false,
-        indicatorChange: false,
+        value: "",
+        isValid: false,
         status: "clear",
       },
     };
   },
   methods: {
-    nameValidateStatus() {
+    nameValidator() {
       if (this.nameOfProduct.value.length > 0) {
-        this.nameOfProduct.ready = true;
-        this.nameOfProduct.status = "ready";
+        this.nameOfProduct.isValid = true;
+        this.nameOfProduct.status = "isValid";
       } else {
-        this.nameOfProduct.ready = false;
-        this.nameOfProduct.status = "dirty";
+        this.nameOfProduct.isValid = false;
+        this.nameOfProduct.status = "invalid";
       }
     },
-    imgLinkValidateStatus() {
-      const reg =
-        /(https?:\/\/|ftps?:\/\/|www\.)((?![.,?!;:()]*(\s|$))[^\s]){2,}/gim;
+    imgLinkValidator() {
+      const reg = /(https?:\/\/|ftps?:\/\/|www\.)((?![.,?!;:()]*(\s|$))[^\s]){2,}/gim;
       if (reg.test(this.imgLinkOfProduct.value) === true) {
-        this.imgLinkOfProduct.status = "ready";
-        this.imgLinkOfProduct.ready = true;
+        this.imgLinkOfProduct.status = "isValid";
+        this.imgLinkOfProduct.isValid = true;
       }
       if (this.imgLinkOfProduct.value === "") {
-        this.imgLinkOfProduct.status = "dirty";
-        this.imgLinkOfProduct.ready = false;
-      }
-    },
-    priceValidateStatus() {
-      const reg = /(\$[0-9 ]+(\.[0-9]{2})?)/;
-      if (reg.test(this.priceOfProduct.value) === true) {
-        this.priceOfProduct.status = "ready";
-        this.priceOfProduct.ready = true;
-      } else {
-        this.priceOfProduct.status = "dirty";
-        this.imgLinkOfProduct.ready = false;
+        this.imgLinkOfProduct.status = "invalid";
+        this.imgLinkOfProduct.isValid = false;
       }
     },
     priceValidator(event) {
-      const reg = /(\d|\.|,)/;
-      if (reg.test(event.key) === false) {
+      const reg = /(\d)/;
+      if (reg.test(event.key) === false || this.priceOfProduct.displayedValue[0] === "0") {
         event.preventDefault();
-      }
-      if (event.key === ',' || event.key === '.') {
-        if(this.priceOfProduct.displayedValue.trim() === '') {
-          event.preventDefault();
-        }
-        if(this.priceOfProduct.displayedValue.includes('.') || this.priceOfProduct.displayedValue.includes(',')){
-          event.preventDefault();
-        }
+        this.priceOfProduct.status = "invalid";
+        this.priceOfProduct.isValid = false;
+        this.priceOfProduct.value = "";
+      } else {
+        this.priceOfProduct.status = "isValid";
+        this.priceOfProduct.isValid = true;
       }
     },
+    pushProductToStore() {
+      const product = {
+        id: Date.now(),
+        name: this.nameOfProduct.value,
+        description: this.descriptionOfProduct.value,
+        imgLink: this.imgLinkOfProduct.value,
+        price: this.priceOfProduct.value,
+        displayedPrice: this.priceOfProduct.displayedValue
+      };
+      console.log(product)
+      this.$store.commit('addProductToList', product)
+    }
   },
   computed: {
     modelNumber: {
       get() {
-        const parts = this.priceOfProduct.value.toString().replace(",", ".").toString().split('.');
-        //регулярное выражение взято с https://stackoverflow.com/questions/16637051/adding-space-between-numbers
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        return parts.join(".");
+        const parts = this.priceOfProduct.value.toLocaleString();
+        return parts;
       },
       set(newPrice) {
         this.priceOfProduct.displayedValue = newPrice;
-        if(Number.isNaN(newPrice.replace(/\s/g, "").replace(',', '.')) === false) {
-          this.priceOfProduct.value = +newPrice.replace(/\s/g, "").replace(',', '.');
+        if (Number.isNaN(newPrice.replace(/\s/g, "")) === false) {
+          this.priceOfProduct.value = +newPrice.replace(/\s/g, "");
         }
       },
     },
+    isButtonDisabled() {
+      if (this.nameOfProduct.isValid === true && this.imgLinkOfProduct.isValid === true && this.priceOfProduct.isValid === true) return false
+      return true
+    }
   },
 };
 </script>
@@ -228,6 +236,9 @@ export default {
         color: #b4b4b4;
         padding: 0;
       }
+    }
+    .invalid {
+      outline: 1px solid #ff8484;
     }
     & > .input-description {
       height: 108px;
