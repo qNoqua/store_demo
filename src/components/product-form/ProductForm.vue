@@ -9,9 +9,13 @@
           type="text"
           placeholder="Введите наименование товара"
           id="name"
+          v-model="nameOfProduct.value"
+          v-on:input="nameValidateStatus"
         />
-        <span></span>
-        <span class="span-err">Поле является обязательным</span>
+        <span v-if="nameOfProduct.status === 'dirty'" class="span-err"
+          >Поле является обязательным</span
+        >
+        <span v-else></span>
       </div>
       <div class="input-container">
         <label for="description" class="description">Описание товара</label>
@@ -32,20 +36,30 @@
           type="text"
           placeholder="Введите ссылку"
           id="img-link"
+          v-model="imgLinkOfProduct.value"
+          v-on:input="imgLinkValidateStatus"
         />
-        <span></span>
-        <span class="span-err">Поле является обязательным</span>
+        <span v-if="imgLinkOfProduct.status === 'dirty'" class="span-err"
+          >Поле является обязательным</span
+        >
+        <span v-else></span>
       </div>
       <div class="input-container">
         <label for="price" class="price-label" required>Цена товара</label>
         <input
           class="input input-price"
+          v-model="modelNumber"
+          v-on:focus="priceOfProduct.indicatorChange = true"
+          v-on:blur="priceOfProduct.indicatorChange = false"
+          v-on:keypress="priceValidator"
           type="text"
           placeholder="Введите цену"
           id="price"
         />
-        <span></span>
-        <span class="span-err">Поле является обязательным</span>
+        <span v-if="priceOfProduct.status === 'dirty'" class="span-err"
+          >Поле является обязательным</span
+        >
+        <span v-else></span>
       </div>
       <button class="btn">Добавить товар</button>
     </div>
@@ -53,7 +67,92 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      nameOfProduct: {
+        value: null,
+        ready: false,
+        status: "clear",
+      },
+      imgLinkOfProduct: {
+        value: null,
+        ready: false,
+        status: "clear",
+      },
+      priceOfProduct: {
+        displayedValue: "",
+        value: 0,
+        ready: false,
+        indicatorChange: false,
+        status: "clear",
+      },
+    };
+  },
+  methods: {
+    nameValidateStatus() {
+      if (this.nameOfProduct.value.length > 0) {
+        this.nameOfProduct.ready = true;
+        this.nameOfProduct.status = "ready";
+      } else {
+        this.nameOfProduct.ready = false;
+        this.nameOfProduct.status = "dirty";
+      }
+    },
+    imgLinkValidateStatus() {
+      const reg =
+        /(https?:\/\/|ftps?:\/\/|www\.)((?![.,?!;:()]*(\s|$))[^\s]){2,}/gim;
+      if (reg.test(this.imgLinkOfProduct.value) === true) {
+        this.imgLinkOfProduct.status = "ready";
+        this.imgLinkOfProduct.ready = true;
+      }
+      if (this.imgLinkOfProduct.value === "") {
+        this.imgLinkOfProduct.status = "dirty";
+        this.imgLinkOfProduct.ready = false;
+      }
+    },
+    priceValidateStatus() {
+      const reg = /(\$[0-9 ]+(\.[0-9]{2})?)/;
+      if (reg.test(this.priceOfProduct.value) === true) {
+        this.priceOfProduct.status = "ready";
+        this.priceOfProduct.ready = true;
+      } else {
+        this.priceOfProduct.status = "dirty";
+        this.imgLinkOfProduct.ready = false;
+      }
+    },
+    priceValidator(event) {
+      const reg = /(\d|\.|,)/;
+      if (reg.test(event.key) === false) {
+        event.preventDefault();
+      }
+      if (event.key === ',' || event.key === '.') {
+        if(this.priceOfProduct.displayedValue.trim() === '') {
+          event.preventDefault();
+        }
+        if(this.priceOfProduct.displayedValue.includes('.') || this.priceOfProduct.displayedValue.includes(',')){
+          event.preventDefault();
+        }
+      }
+    },
+  },
+  computed: {
+    modelNumber: {
+      get() {
+        const parts = this.priceOfProduct.value.toString().replace(",", ".").toString().split('.');
+        //регулярное выражение взято с https://stackoverflow.com/questions/16637051/adding-space-between-numbers
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        return parts.join(".");
+      },
+      set(newPrice) {
+        this.priceOfProduct.displayedValue = newPrice;
+        if(Number.isNaN(newPrice.replace(/\s/g, "").replace(',', '.')) === false) {
+          this.priceOfProduct.value = +newPrice.replace(/\s/g, "").replace(',', '.');
+        }
+      },
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
