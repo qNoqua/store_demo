@@ -3,6 +3,9 @@ export const mutations = {
         state.products[product.id] = product
         state.productsIds.push(product.id)
         updateLocalsorage(state.products, state.productsIds)
+    },
+    selectedSort(state, option) {
+        state.sortDirection = option.value
     }
 }
 const updateLocalsorage = (products, productsIds) => {

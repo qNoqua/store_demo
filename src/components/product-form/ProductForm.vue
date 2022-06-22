@@ -179,6 +179,7 @@ export default {
 .left-container {
   display: grid;
   grid-gap: 20px;
+  align-items: flex-start;
   .form-title {
     font-family: "Source Sans Pro";
     font-style: normal;

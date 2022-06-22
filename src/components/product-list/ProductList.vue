@@ -1,9 +1,7 @@
 <template>
   <div class="right-container">
     <div class="btn-container">
-      <button class="btn">
-        По умолчанию <img src="../../assets/icons/rectangle.png" alt="" />
-      </button>
+      <drop-down/>
     </div>
     <div class="list-container">
       <product-item
@@ -17,9 +15,11 @@
 
 <script>
 import ProductItem from "@/components/product-list/ProductItem.vue";
+import DropDown from "@/components/UI/DropDown.vue";
 export default {
   components: {
     ProductItem,
+    DropDown
   },
   computed: {
     products() {
