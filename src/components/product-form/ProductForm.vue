@@ -9,9 +9,14 @@
           type="text"
           placeholder="Введите наименование товара"
           id="name"
+          v-model="nameOfProduct.value"
+          v-on:input="nameValidator"
+          v-bind:class="nameOfProduct.status"
         />
-        <span></span>
-        <span class="span-err">Поле является обязательным</span>
+        <span v-if="nameOfProduct.status === 'invalid'" class="span-err"
+          >Поле является обязательным</span
+        >
+        <span v-else></span>
       </div>
       <div class="input-container">
         <label for="description" class="description">Описание товара</label>
@@ -20,6 +25,7 @@
           type="text"
           placeholder="Введите описание товара"
           id="description"
+          v-model="descriptionOfProduct.value"
         />
         <span></span>
       </div>
@@ -32,28 +38,129 @@
           type="text"
           placeholder="Введите ссылку"
           id="img-link"
+          v-model="imgLinkOfProduct.value"
+          v-on:input="imgLinkValidator"
+          v-bind:class="imgLinkOfProduct.status"
         />
-        <span></span>
-        <span class="span-err">Поле является обязательным</span>
+        <span v-if="imgLinkOfProduct.status === 'invalid'" class="span-err"
+          >Поле является обязательным</span
+        >
+        <span v-else></span>
       </div>
       <div class="input-container">
         <label for="price" class="price-label" required>Цена товара</label>
         <input
           class="input input-price"
+          v-model="modelNumber"
+          v-on:focus="clearPriceInput"
+          v-on:keyup="priceValidator"
           type="text"
           placeholder="Введите цену"
           id="price"
+          v-bind:class="priceOfProduct.status"
         />
-        <span></span>
-        <span class="span-err">Поле является обязательным</span>
+        <span v-if="priceOfProduct.status === 'invalid'" class="span-err"
+          >Поле является обязательным</span
+        >
+        <span v-else></span>
       </div>
-      <button class="btn">Добавить товар</button>
+      <button v-bind:disabled="isButtonDisabled" v-on:click.prevent="pushProductToStore" class="btn">
+        Добавить товар
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      nameOfProduct: {
+        value: null,
+        isValid: false,
+        status: "clear",
+      },
+      descriptionOfProduct: {
+        value: null,
+      },
+      imgLinkOfProduct: {
+        value: null,
+        isValid: false,
+        status: "clear",
+      },
+      priceOfProduct: {
+        displayedValue: "",
+        value: "",
+        isValid: false,
+        status: "clear",
+      },
+    };
+  },
+  methods: {
+    nameValidator() {
+      if (this.nameOfProduct.value.length > 0) {
+        this.nameOfProduct.isValid = true;
+        this.nameOfProduct.status = "isValid";
+      } else {
+        this.nameOfProduct.isValid = false;
+        this.nameOfProduct.status = "invalid";
+      }
+    },
+    imgLinkValidator() {
+      const reg = /(https?:\/\/|ftps?:\/\/|www\.)((?![.,?!;:()]*(\s|$))[^\s]){2,}/gim;
+      if (reg.test(this.imgLinkOfProduct.value) === true) {
+        this.imgLinkOfProduct.status = "isValid";
+        this.imgLinkOfProduct.isValid = true;
+      }
+      if (this.imgLinkOfProduct.value === "") {
+        this.imgLinkOfProduct.status = "invalid";
+        this.imgLinkOfProduct.isValid = false;
+      }
+    },
+    priceValidator(event) {
+      const reg = /(\d)/;
+      if (reg.test(event.key) === false || this.priceOfProduct.displayedValue[0] === "0") {
+        event.preventDefault();
+        this.priceOfProduct.status = "invalid";
+        this.priceOfProduct.isValid = false;
+        this.priceOfProduct.value = "";
+      } else {
+        this.priceOfProduct.status = "isValid";
+        this.priceOfProduct.isValid = true;
+      }
+    },
+    pushProductToStore() {
+      const product = {
+        id: Date.now(),
+        name: this.nameOfProduct.value,
+        description: this.descriptionOfProduct.value,
+        imgLink: this.imgLinkOfProduct.value,
+        price: this.priceOfProduct.value,
+        displayedPrice: this.priceOfProduct.displayedValue
+      };
+      console.log(product)
+      this.$store.commit('addProductToList', product)
+    }
+  },
+  computed: {
+    modelNumber: {
+      get() {
+        const parts = this.priceOfProduct.value.toLocaleString();
+        return parts;
+      },
+      set(newPrice) {
+        this.priceOfProduct.displayedValue = newPrice;
+        if (Number.isNaN(newPrice.replace(/\s/g, "")) === false) {
+          this.priceOfProduct.value = +newPrice.replace(/\s/g, "");
+        }
+      },
+    },
+    isButtonDisabled() {
+      if (this.nameOfProduct.isValid === true && this.imgLinkOfProduct.isValid === true && this.priceOfProduct.isValid === true) return false
+      return true
+    }
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -129,6 +236,9 @@ export default {};
         color: #b4b4b4;
         padding: 0;
       }
+    }
+    .invalid {
+      outline: 1px solid #ff8484;
     }
     & > .input-description {
       height: 108px;
