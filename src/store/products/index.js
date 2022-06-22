@@ -4,7 +4,7 @@ import { actions } from './actions'
 
 export const productsModule = {
     state: {
-        product: JSON.parse(localStorage.getItem('localProduct')) || {},
+        products: JSON.parse(localStorage.getItem('localProduct')) || {},
         productsIds: JSON.parse(localStorage.getItem('localproductsIds')) || []
     },
     getters: getters,

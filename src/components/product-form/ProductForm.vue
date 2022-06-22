@@ -1,5 +1,5 @@
 <template>
-  <div class="add-form__container">
+  <div class="left-container">
     <div class="form-title">Добавление товара</div>
     <div class="form-container">
       <div class="input-container">
@@ -64,7 +64,11 @@
         >
         <span v-else></span>
       </div>
-      <button v-bind:disabled="isButtonDisabled" v-on:click.prevent="pushProductToStore" class="btn">
+      <button
+        v-bind:disabled="isButtonDisabled"
+        v-on:click.prevent="pushProductToStore"
+        class="btn"
+      >
         Добавить товар
       </button>
     </div>
@@ -107,7 +111,8 @@ export default {
       }
     },
     imgLinkValidator() {
-      const reg = /(https?:\/\/|ftps?:\/\/|www\.)((?![.,?!;:()]*(\s|$))[^\s]){2,}/gim;
+      const reg =
+        /(https?:\/\/|ftps?:\/\/|www\.)((?![.,?!;:()]*(\s|$))[^\s]){2,}/gim;
       if (reg.test(this.imgLinkOfProduct.value) === true) {
         this.imgLinkOfProduct.status = "isValid";
         this.imgLinkOfProduct.isValid = true;
@@ -119,7 +124,10 @@ export default {
     },
     priceValidator(event) {
       const reg = /(\d)/;
-      if (reg.test(event.key) === false || this.priceOfProduct.displayedValue[0] === "0") {
+      if (
+        reg.test(event.key) === false ||
+        this.priceOfProduct.displayedValue[0] === "0"
+      ) {
         event.preventDefault();
         this.priceOfProduct.status = "invalid";
         this.priceOfProduct.isValid = false;
@@ -137,9 +145,9 @@ export default {
         imgLink: this.imgLinkOfProduct.value,
         price: this.priceOfProduct.value,
       };
-      console.log(product)
-      this.$store.commit('addProductToList', product)
-    }
+      console.log(product);
+      this.$store.commit("addProductToList", product);
+    },
   },
   computed: {
     modelNumber: {
@@ -155,15 +163,20 @@ export default {
       },
     },
     isButtonDisabled() {
-      if (this.nameOfProduct.isValid === true && this.imgLinkOfProduct.isValid === true && this.priceOfProduct.isValid === true) return false
-      return true
-    }
+      if (
+        this.nameOfProduct.isValid === true &&
+        this.imgLinkOfProduct.isValid === true &&
+        this.priceOfProduct.isValid === true
+      )
+        return false;
+      return true;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.add-form__container {
+.left-container {
   display: grid;
   grid-gap: 20px;
   .form-title {
@@ -171,6 +184,7 @@ export default {
     font-style: normal;
     font-weight: 600;
     font-size: 28px;
+    height: 50px;
     line-height: 35px;
     color: #3f3f3f;
   }
@@ -186,10 +200,9 @@ export default {
   }
   .input-container {
     display: grid;
-    grid-gap: 3px;
-
     & > label {
       position: relative;
+      margin-bottom: 3px;
       font-family: "Source Sans Pro";
       font-style: normal;
       font-weight: 400;
@@ -223,8 +236,12 @@ export default {
       line-height: 15px;
       color: #3f3f3f;
       resize: none;
+      transition: 200ms;
+      &:hover {
+        background: #e5e5e5;
+      }
       &:focus {
-        outline: 1px solid #3f3f3f;
+        outline: 1px solid #fffefb;
       }
       &::placeholder {
         font-family: "Source Sans Pro";
