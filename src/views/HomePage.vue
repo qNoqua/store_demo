@@ -20,7 +20,7 @@ export default {
 <style lang="scss" scoped>
 .product-page-container {
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 332px 3fr;
   grid-gap: 10px;
   align-items: flex-start;
   padding: 30px;
