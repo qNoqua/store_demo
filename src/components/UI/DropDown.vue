@@ -5,7 +5,7 @@
     v-on:mouseleave="isVisible = false"
     v-on:click="isVisible = false"
   >
-    <span class="title">Сортировка</span>
+    <span class="title">По умолчанию</span>
     <img src="../../assets/icons/rectangle.svg" />
     <div class="options" v-if="isVisible">
       <div
@@ -25,9 +25,9 @@ export default {
   data() {
     return {
       options: [
-        { name: "наименованию", value: "name" },
-        { name: "возрастанию цены", value: "increase" },
-        { name: "убыванию цены", value: "decrease" },
+        { name: "по наименованию", value: "name" },
+        { name: "по возрастанию цены", value: "increase" },
+        { name: "по убыванию цены", value: "decrease" },
       ],
       isVisible: false,
       sortDirection: null,
@@ -74,11 +74,13 @@ export default {
     position: absolute;
     right: 0;
     top: 100%;
+    background: #fffefb;
     border-radius: 4px;
     z-index: 10;
     & > .option {
       height: 36px;
       padding: 10px;
+      border-radius: 4px;
       &:hover {
         background: #e5e5e5;
       }

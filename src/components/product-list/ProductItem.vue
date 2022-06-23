@@ -1,27 +1,34 @@
 <template>
-  <div class="product-container" v-on:mouseover="isVisibilityButton = true"
-  v-on:mouseleave="isVisibilityButton = false">
+  <div
+    class="product-container"
+    v-on:mouseover="isVisibilityButton = true"
+    v-on:mouseleave="isVisibilityButton = false"
+  >
     <div class="img-container">
       <img v-bind:src="stats.imgLink" />
     </div>
     <div class="stats-container">
       <div class="title-container">{{ stats.name }}</div>
       <div class="description-container">{{ stats.description }}</div>
-      <div class="price-container">{{ stats.price }} руб.</div>
+      <div class="price-container">{{ stats.price.toLocaleString() }} руб.</div>
     </div>
-    <button class="btn" v-on:click.prevent="removeProduct" v-if="isVisibilityButton">
-      <img src="../../assets/icons/delete.svg"/>
+    <button
+      class="btn"
+      v-on:click.prevent="removeProduct"
+      v-if="isVisibilityButton"
+    >
+      <img src="../../assets/icons/delete.svg" />
     </button>
   </div>
 </template>
 
 <script>
 export default {
-data () {
-return {
-   isVisibilityButton: false,
-}
-},
+  data() {
+    return {
+      isVisibilityButton: false,
+    };
+  },
   props: {
     stats: {
       type: Object,
@@ -30,10 +37,10 @@ return {
   },
   methods: {
     removeProduct() {
-      console.log(this.stats)
-      this.$store.commit('removeProduct', this.stats)
-    }
-  }
+      console.log(this.stats);
+      this.$store.commit("removeProduct", this.stats);
+    },
+  },
 };
 </script>
 
@@ -42,7 +49,7 @@ return {
   display: grid;
   position: relative;
   width: 332px;
-  height: 423px;
+  height: 424px;
   background: #fffefb;
   box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04),
     0px 6px 10px rgba(0, 0, 0, 0.02);
@@ -62,11 +69,13 @@ return {
       object-fit: cover;
       width: 100%;
       height: 100%;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
     }
   }
   .stats-container {
     display: grid;
-    grid-template-rows: 60px 82px 90px;
+    grid-template-rows: 60px 110px 56px;
     .title-container {
       display: flex;
       padding: 0 15px;

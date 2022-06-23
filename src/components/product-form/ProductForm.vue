@@ -166,7 +166,6 @@ export default {
         imgLink: this.imgLinkOfProduct.value,
         price: this.priceOfProduct.value,
       };
-      console.log(product);
       this.$store.commit("addProductToList", product);
       this.nameOfProduct.value = "";
       this.descriptionOfProduct.value = "";
@@ -216,7 +215,6 @@ export default {
 }
 .left-container {
   display: grid;
-  grid-gap: 20px;
   align-items: flex-start;
   .form-title {
     display: flex;
@@ -291,33 +289,34 @@ export default {
     min-height: 440px;
     padding: 27px;
     background: #fffefb;
-    &>span{
-    display: flex;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    border: 8px solid #7bae73;
-    border-radius: 50%;
-    width: 200px;
-    height: 200px;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 80px;
-    color: #7bae73;
-    justify-content: center;
-    align-items: center;
+    & > span {
+      display: flex;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      border: 8px solid #7bae73;
+      border-radius: 50%;
+      width: 200px;
+      height: 200px;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 80px;
+      color: #7bae73;
+      justify-content: center;
+      align-items: center;
     }
   }
   .form-container {
     display: grid;
     min-width: 322px;
     min-height: 440px;
-    padding: 27px;
+    padding: 23px;
     background: #fffefb;
   }
   .input-container {
     display: grid;
     & > label {
       position: relative;
-      margin-bottom: 3px;
+      margin-bottom: 5px;
+      margin-top: 2px;
       font-family: "Source Sans Pro";
       font-style: normal;
       font-weight: 400;
@@ -330,7 +329,7 @@ export default {
           content: ".";
           position: absolute;
           color: #ff8484;
-          font-size: 28px;
+          font-size: 25px;
           top: -12px;
           right: auto;
         }
@@ -342,8 +341,8 @@ export default {
       border-radius: 4px;
       border: none;
       width: auto;
-      height: 36px;
-      padding: 18px 15px;
+      height: 32px;
+      padding: 18px 14px;
       font-family: "Source Sans Pro";
       font-style: normal;
       font-weight: 400;
@@ -372,8 +371,9 @@ export default {
       outline: 1px solid #ff8484;
     }
     & > .input-description {
-      height: 108px;
+      height: 110px;
       padding-top: 12px;
+      margin-bottom: 5px;
     }
     & > span {
       height: 10px;
@@ -399,7 +399,7 @@ export default {
     line-height: 15px;
     color: #ffffff;
     height: 36px;
-    margin-top: 21px;
+    margin-top: 18px;
     cursor: pointer;
     transition: 150ms;
     &:hover {

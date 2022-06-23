@@ -36,11 +36,10 @@ export default {
 .list-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, 332px);
-  grid-auto-rows: 432px;
+  grid-auto-rows: 424px;
   grid-gap: 15px;
   justify-content: center;
   justify-items: center;
-  align-items: center;
 }
 .btn-container {
   display: grid;

@@ -25,6 +25,9 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background: rgba(255, 254, 251, 0.8);
+}
+html {
+    background: rgba(255, 254, 251, 0.8);
+
 }
 </style>
